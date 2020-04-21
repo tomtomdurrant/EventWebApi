@@ -16,7 +16,7 @@ namespace EventWebApi.Models
             this.ConnectionString = connectionString;
         }
 
-        private MySqlConnection GetConnection()
+        public MySqlConnection GetConnection()
         {
             return new MySqlConnection(ConnectionString);
         }
