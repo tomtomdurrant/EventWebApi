@@ -66,5 +66,40 @@ namespace EventWebApi.Controllers
 
             return Ok(allEvents);
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody]Event newEvent)
+        {
+            MySqlConnection conn = _context.GetConnection();
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql =
+                    $@"INSERT INTO bootcamp9.Events(Events.Name, Events.HostId, Events.AddressId)
+VALUES (@EventName, @HostId, @AddressId);";
+
+
+                var cmd = new MySqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("EventName", newEvent.Name);
+                cmd.Parameters.AddWithValue("HostId", newEvent.Host.ID);
+                cmd.Parameters.AddWithValue("AddressId", newEvent.Address.ID);
+
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest();
+
+            }
+            conn.Close();
+
+            return Ok();
+        }
     }
 }
